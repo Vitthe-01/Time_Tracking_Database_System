@@ -26,6 +26,8 @@ time-tracking-database-system/
   triggers/                    os 5 triggers
   views/                       as 5 views
   dql/                         as 20 consultas, numeradas de 01 a 20
+  interface/                   PG Studio (IDE Web PostgreSQL: index.html, styles.css, app.js, data.js)
+  server/                      backend Node.js + Express + pg para executar SQL real no PostgreSQL
 ```
 
 ## Resumo do modelo
@@ -59,3 +61,31 @@ Os dados cobrem as duas últimas semanas de outubro de 2026 (19 a 31/10), com 30
 - `vw_relatorio_inconsistencias_ponto`: alertas de auditoria, dias com marcações ímpares e intervalos insuficientes.
 - `vw_demonstrativo_adicional_noturno`: minutos e horas trabalhados entre 22h e 5h por colaborador e mês.
 - `vw_escalas_jornadas_vigentes`: escala vigente de cada colaborador ativo, com horários e dias de folga.
+
+## PG Studio — Interface IDE PostgreSQL (`interface/` e `server/`)
+
+O projeto conta com uma **IDE Web para PostgreSQL** (inspirada no pgAdmin / DBeaver) pensada para executar e demonstrar todo o **core do banco de dados** diretamente pelo navegador:
+
+- **Object Explorer**: árvore lateral com todas as **25 Tabelas**, **5 Views**, **20 Consultas DQL**, **13 Procedures/Functions**, **5 Triggers** e **3 Scripts DDL** com filtro rápido.
+- **Query Editor com múltiplas abas**: editor SQL com numeração de linhas, atalhos `Ctrl+Enter` / `F5`, execução de trecho selecionado e snippets prontos (`CALL sp_...`) para testar procedures e triggers.
+- **Painel de Saída redimensionável**:
+  - **Data Output**: grade de resultados com filtro em tempo real, contagem de linhas, tempo de execução (`ms`) e exportação para **CSV**.
+  - **Messages**: console com saídas, `NOTICE`, `SQLSTATE`, `DETAIL` e mensagens de `RAISE EXCEPTION` dos triggers.
+  - **Structure**: inspeção de colunas, tipos e constraints das tabelas.
+  - **History**: histórico clicável das queries executadas na sessão.
+- **Botão "Rodar Core do Projeto"**: executa todos os scripts do repositório na ordem correta (`DDL` → `DML` → `Procedures_Functions` → `Triggers` → `Views`) direto no PostgreSQL.
+- **Modal de Conexão**: permite configurar `host`, `port`, `database`, `user` e `password` diretamente pela interface.
+
+### 1. Executando com PostgreSQL real (recomendado para rodar o core)
+```bash
+cd server
+cp .env.example .env   # opcional: também é possível configurar pela própria interface
+npm install
+npm start
+```
+Abra `http://localhost:3000` no navegador, clique no botão de conexão no canto superior direito (se precisar ajustar usuário/senha/banco) e clique em **Rodar Core do Projeto** para instalar tudo e executar queries reais no PostgreSQL.
+
+### 2. Modo Offline (sem instalar Node.js nem PostgreSQL)
+Basta abrir o arquivo `interface/index.html` diretamente no navegador. A IDE carrega automaticamente o **Engine Local** com os dados reais extraídos da pasta `DML/`, suportando `SELECT`, as 5 Views, os 20 scripts `DQL/` e testes de `CALL sp_...`.
+
+

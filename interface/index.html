@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PG Studio — Time Tracking Database System (PostgreSQL IDE)</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="ide-shell">
+    <!-- Top Bar -->
+    <header class="ide-topbar">
+      <div class="ide-brand">
+        <div class="ide-logo">PG</div>
+        <span class="ide-brand-title">PG Studio</span>
+        <span class="ide-brand-sub">Time_Tracking_Database_System</span>
+      </div>
+
+      <div class="ide-top-actions">
+        <button class="btn" id="btn-run-core" title="Executa DDL, DML, Procedures, Triggers e Views na ordem do projeto">
+          🗄️ Rodar Core do Projeto
+        </button>
+        <button class="conn-btn" id="btn-connection" title="Configurar conexão PostgreSQL">
+          <span class="dot" id="conn-dot"></span>
+          <span id="conn-label">Engine Local (Offline)</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main IDE Body -->
+    <div class="ide-body">
+      <!-- Object Explorer -->
+      <aside class="explorer">
+        <div class="explorer-header">
+          <div class="explorer-title">
+            <span>Object Explorer</span>
+            <span style="font-family:var(--font-mono);color:var(--text-dim);">public</span>
+          </div>
+          <input type="text" class="explorer-search" id="explorer-filter" placeholder="Filtrar tabelas, views, DQL..." />
+        </div>
+        <div class="explorer-tree" id="explorer-tree"></div>
+      </aside>
+
+      <!-- Workspace (Tabs + Editor + Resizer + Output) -->
+      <section class="workspace">
+        <div class="tabs-bar" id="tabs-bar"></div>
+
+        <div class="editor-toolbar">
+          <button class="btn btn-run" id="btn-exec" title="Executar query (Ctrl+Enter ou F5)">▶ Executar</button>
+          <button class="btn" id="btn-exec-sel" title="Executar apenas o trecho selecionado">▷ Seleção</button>
+          <div class="toolbar-sep"></div>
+          <select class="toolbar-select" id="snippet-select">
+            <option value="">⚡ Inserir CALL / Snippet...</option>
+            <option value="call_registrar_ok">CALL sp_registrar_marcacao_ponto (Válido)</option>
+            <option value="call_registrar_alert">CALL sp_registrar_marcacao_ponto (Fora Raio/IP)</option>
+            <option value="call_registrar_block">CALL sp_registrar_marcacao_ponto (Bloqueio Espelho)</option>
+            <option value="call_fechar">CALL sp_fechar_espelho_ponto_mensal (Colab #21)</option>
+            <option value="call_abonar">CALL sp_abonar_falta_atraso (Colab #21)</option>
+            <option value="call_recalcular">CALL sp_recalcular_banco_horas (Colab #5)</option>
+            <option value="call_escala">CALL sp_vincular_escala_trabalho</option>
+          </select>
+          <div class="toolbar-sep"></div>
+          <button class="btn btn-ghost" id="btn-clear">🧹 Limpar</button>
+          <button class="btn btn-ghost" id="btn-export-csv">⬇ CSV</button>
+        </div>
+
+        <div class="editor-pane" id="editor-pane">
+          <div class="editor-gutter" id="editor-gutter">1</div>
+          <textarea class="sql-textarea" id="sql-editor" spellcheck="false" placeholder="-- Digite qualquer comando SQL do PostgreSQL (SELECT, CALL, EXPLAIN, DDL...) e pressione Ctrl+Enter ou F5"></textarea>
+        </div>
+
+        <div class="resizer" id="pane-resizer" title="Arraste para redimensionar"></div>
+
+        <div class="output-pane" id="output-pane">
+          <div class="output-tabs">
+            <div class="output-tab-list">
+              <button class="out-tab active" data-out="grid">📊 Data Output</button>
+              <button class="out-tab" data-out="messages">💬 Messages</button>
+              <button class="out-tab" data-out="structure">🧩 Structure</button>
+              <button class="out-tab" data-out="history">🕒 History</button>
+            </div>
+            <div class="output-meta">
+              <input type="text" class="grid-filter" id="grid-filter" placeholder="Filtrar resultado..." />
+              <span id="out-stats">Pronto</span>
+            </div>
+          </div>
+          <div class="output-body" id="output-body"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Bottom Status Bar -->
+    <footer class="ide-statusbar offline" id="ide-statusbar">
+      <div class="status-group">
+        <span id="status-mode">Modo Offline (Simulador SQL + Dados do Repositório)</span>
+        <span id="status-db">db: time_tracking</span>
+      </div>
+      <div class="status-group">
+        <span id="status-cursor">Ln 1, Col 1</span>
+        <span>Atalhos: Ctrl+Enter / F5 para executar</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Connection Modal -->
+  <div class="modal-backdrop" id="conn-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <strong>Conexão PostgreSQL</strong>
+        <button class="btn btn-ghost" id="conn-modal-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">
+          Para conectar a um PostgreSQL real, rode <code>npm start</code> na pasta <code>server/</code> e informe os dados abaixo:
+        </p>
+        <form id="conn-form">
+          <div class="form-row">
+            <div class="form-field">
+              <label>Host</label>
+              <input type="text" name="host" id="cfg-host" value="localhost" required />
+            </div>
+            <div class="form-field">
+              <label>Port</label>
+              <input type="number" name="port" id="cfg-port" value="5432" required />
+            </div>
+          </div>
+          <div class="form-field">
+            <label>Database</label>
+            <input type="text" name="database" id="cfg-database" value="time_tracking" required />
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label>User</label>
+              <input type="text" name="user" id="cfg-user" value="postgres" required />
+            </div>
+            <div class="form-field">
+              <label>Password</label>
+              <input type="password" name="password" id="cfg-password" value="postgres" />
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px;">
+            <button type="button" class="btn" id="conn-cancel">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Conectar ao PostgreSQL</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
