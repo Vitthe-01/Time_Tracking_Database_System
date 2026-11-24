@@ -26,7 +26,7 @@ time-tracking-database-system/
   triggers/                    os 5 triggers
   views/                       as 5 views
   dql/                         as 20 consultas, numeradas de 01 a 20
-  Tests/                       suíte com 7 scripts SQL de teste (functions, procedures, triggers e views)
+  Tests/                       suíte com 8 scripts SQL de teste (functions, procedures, triggers, views e CRUD)
   interface/                   PG Studio (IDE Web PostgreSQL: index.html, styles.css, app.js, data.js)
   server/                      backend Node.js + Express + pg para executar SQL real no PostgreSQL
 ```
@@ -100,6 +100,7 @@ Para testar todas as funções, procedures, triggers e views durante a apresenta
 5. `Tests/05_test_banco_horas_e_trigger.sql` — testa `sp_recalcular_banco_horas` e `tg_atualizar_banco_horas_diario`.
 6. `Tests/06_test_vincular_escala_trabalho.sql` — testa `sp_vincular_escala_trabalho` (empregador diferente, vínculo duplicado e troca de escala com encerramento de vigência anterior).
 7. `Tests/07_test_todas_views_e_dql_smoke.sql` — smoke test consolidado das 5 Views oficiais.
+8. `Tests/08_test_crud_inserir_editar_excluir.sql` — testa **INSERT, UPDATE e DELETE** em cadastros (`department`, `punch_adjustment`), auditoria de `UPDATE` em `absence_waiver`, edição/exclusão permitida vs bloqueada em `time_punch` (espelho aberto vs fechado) e integridade referencial (`ON DELETE RESTRICT`).
 
 
 
