@@ -700,6 +700,7 @@ function renderExplorer() {
   const q = ide.explorerFilter.trim().toLowerCase();
   const matches = (txt) => !q || txt.toLowerCase().includes(q);
 
+  const tests = (window.SQL_OBJECTS.tests || []).filter((t) => matches(t.filename) || matches(t.description));
   const tables = Object.keys(ide.db).filter(matches);
   const views = (window.SQL_OBJECTS.views || []).filter((v) => matches(v.filename));
   const procs = (window.SQL_OBJECTS.procedures || []).filter((p) => matches(p.filename));
@@ -720,6 +721,9 @@ function renderExplorer() {
   `;
 
   tree.innerHTML =
+    renderGroup('tests', '🧪', 'Scripts de Teste', tests, (t) => `
+      <div class="tree-item" data-open-test="${t.id}" title="${escapeHtml(t.description)}"><span>▪</span><span>${t.filename}</span></div>
+    `) +
     renderGroup('tables', '📋', 'Tables', tables, (t) => {
       const cnt = ide.pgConnected && ide.liveRowCounts && ide.liveRowCounts[t] !== undefined
         ? ide.liveRowCounts[t]
@@ -755,6 +759,13 @@ function renderExplorer() {
       if (ide.collapsedGroups.has(g)) ide.collapsedGroups.delete(g);
       else ide.collapsedGroups.add(g);
       renderExplorer();
+    };
+  });
+
+  tree.querySelectorAll('[data-open-test]').forEach((el) => {
+    el.onclick = () => {
+      const obj = window.SQL_OBJECTS.tests.find((t) => t.id === el.dataset.openTest);
+      createTab(`Tests/${obj.filename}`, obj.sql, false);
     };
   });
 

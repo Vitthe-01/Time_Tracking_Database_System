@@ -26,6 +26,7 @@ time-tracking-database-system/
   triggers/                    os 5 triggers
   views/                       as 5 views
   dql/                         as 20 consultas, numeradas de 01 a 20
+  Tests/                       suíte com 7 scripts SQL de teste (functions, procedures, triggers e views)
   interface/                   PG Studio (IDE Web PostgreSQL: index.html, styles.css, app.js, data.js)
   server/                      backend Node.js + Express + pg para executar SQL real no PostgreSQL
 ```
@@ -87,5 +88,18 @@ Abra `http://localhost:3000` no navegador, clique no botão de conexão no canto
 
 ### 2. Modo Offline (sem instalar Node.js nem PostgreSQL)
 Basta abrir o arquivo `interface/index.html` diretamente no navegador. A IDE carrega automaticamente o **Engine Local** com os dados reais extraídos da pasta `DML/`, suportando `SELECT`, as 5 Views, os 20 scripts `DQL/` e testes de `CALL sp_...`.
+
+## Suíte de Testes SQL (`Tests/`)
+
+Para testar todas as funções, procedures, triggers e views durante a apresentação, execute os scripts na ordem numérica (diretamente pelo grupo **🧪 Scripts de Teste** no PG Studio, no pgAdmin ou via `psql`):
+
+1. `Tests/01_test_functions_auxiliares.sql` — testa `fn_distance_meters`, `fn_night_minutes` e `fn_refresh_daily_summary`.
+2. `Tests/02_test_registrar_ponto_e_triggers.sql` — testa `sp_registrar_marcacao_ponto`, bloqueio de intervalo mínimo (`< 5 min`), alertas de geolocalização e rede CIDR em `punch_audit`, bloqueio em espelho fechado e validação de dispositivo.
+3. `Tests/03_test_abono_e_auditoria.sql` — testa `sp_abonar_falta_atraso` (exigência de documento, bloqueio em espelho fechado e abono válido) + trigger `tg_auditoria_justificativas_abono` em `waiver_audit`.
+4. `Tests/04_test_fechar_espelho_e_bloqueio.sql` — testa `sp_fechar_espelho_ponto_mensal` (rejeição de mês futuro, fechamento real em mês encerrado `2026-01`, bloqueio de duplo fechamento e bloqueio pós-fechamento).
+5. `Tests/05_test_banco_horas_e_trigger.sql` — testa `sp_recalcular_banco_horas` e `tg_atualizar_banco_horas_diario`.
+6. `Tests/06_test_vincular_escala_trabalho.sql` — testa `sp_vincular_escala_trabalho` (empregador diferente, vínculo duplicado e troca de escala com encerramento de vigência anterior).
+7. `Tests/07_test_todas_views_e_dql_smoke.sql` — smoke test consolidado das 5 Views oficiais.
+
 
 
