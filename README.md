@@ -26,7 +26,7 @@ time-tracking-database-system/
   triggers/                    os 5 triggers
   views/                       as 5 views
   dql/                         as 20 consultas, numeradas de 01 a 20
-  Tests/                       suíte com 11 scripts SQL (00 setup estrutura+carga + 01..09 testes + 10 fluxo completo)
+  Tests/                       roteiro enxuto com 5 scripts SQL para demonstração (00 setup + 01 a 04 demos)
   interface/                   PG Studio (IDE Web PostgreSQL: index.html, styles.css, app.js, data.js)
   server/                      backend Node.js + Express + pg para executar SQL real no PostgreSQL
 ```
@@ -89,21 +89,15 @@ Abra `http://localhost:3000` no navegador, clique no botão de conexão no canto
 ### 2. Modo Offline (sem instalar Node.js nem PostgreSQL)
 Basta abrir o arquivo `interface/index.html` diretamente no navegador. A IDE carrega automaticamente o **Engine Local** com os dados reais extraídos da pasta `DML/`, suportando `SELECT`, as 5 Views, os 20 scripts `DQL/` e testes de `CALL sp_...`.
 
-## Suíte de Testes SQL (`Tests/`)
+## Roteiro de Demonstração SQL (`Tests/`)
 
-Para testar todas as funções, procedures, triggers e views durante a apresentação, execute os scripts na ordem numérica (diretamente pelo grupo **🧪 Scripts de Teste** no PG Studio, no pgAdmin ou via `psql`):
+Para demonstrar todo o projeto de forma rápida e objetiva (pelo grupo **🧪 Scripts de Teste** no PG Studio, pgAdmin ou `psql`), execute os **5 scripts essenciais** em ordem:
 
-0. `Tests/00_setup_estrutura_e_dados.sql` — **EXECUTE PRIMEIRO**: script autocontido que limpa, gera toda a estrutura do banco (25 tabelas e índices), alimenta todas as tabelas + sequences e cria todas as Functions, Procedures, Triggers e Views antes de rodar os testes (também disponível via `psql -f install.sql`).
-1. `Tests/01_test_ddl_create_e_drop.sql` — testa **DDL** (`DROP TABLE IF EXISTS`, `CREATE TABLE` com PK/FK/CHECK/DEFAULT, validação de constraint e limpeza segura com `DROP TABLE IF EXISTS`).
-2. `Tests/02_test_functions_auxiliares.sql` — testa `fn_distance_meters`, `fn_night_minutes` e `fn_refresh_daily_summary`.
-3. `Tests/03_test_registrar_ponto_e_triggers.sql` — testa `sp_registrar_marcacao_ponto`, bloqueio de intervalo mínimo (`< 5 min`), alertas de geolocalização e rede CIDR em `punch_audit`, bloqueio em espelho fechado e validação de dispositivo.
-4. `Tests/04_test_abono_e_auditoria.sql` — testa `sp_abonar_falta_atraso` (exigência de documento, bloqueio em espelho fechado e abono válido) + trigger `tg_auditoria_justificativas_abono` em `waiver_audit`.
-5. `Tests/05_test_fechar_espelho_e_bloqueio.sql` — testa `sp_fechar_espelho_ponto_mensal` (rejeição de mês futuro, fechamento real em mês encerrado `2026-01`, bloqueio de duplo fechamento e bloqueio pós-fechamento).
-6. `Tests/06_test_banco_horas_e_trigger.sql` — testa `sp_recalcular_banco_horas` e `tg_atualizar_banco_horas_diario`.
-7. `Tests/07_test_vincular_escala_trabalho.sql` — testa `sp_vincular_escala_trabalho` (empregador diferente, vínculo duplicado e troca de escala com encerramento de vigência anterior).
-8. `Tests/08_test_todas_views_e_dql_smoke.sql` — smoke test consolidado das 5 Views oficiais.
-9. `Tests/09_test_crud_inserir_editar_excluir.sql` — testa **INSERT, UPDATE e DELETE** em cadastros (`department`, `punch_adjustment`), auditoria de `UPDATE` em `absence_waiver`, edição/exclusão permitida vs bloqueada em `time_punch` (espelho aberto vs fechado) e integridade referencial (`ON DELETE RESTRICT`).
-10. `Tests/10_fluxo_completo_apresentacao.sql` — **roteiro ponta a ponta** que aciona em sequência todas as 3 Functions, 5 Procedures, 5 Triggers e 5 Views do projeto.
+0. `Tests/00_setup_estrutura_e_dados.sql` — **EXECUTE PRIMEIRO**: gera toda a estrutura do banco (25 tabelas e índices), alimenta todas as tabelas + sequences e cria todas as Functions, Procedures, Triggers e Views (também disponível via `psql -f install.sql`).
+1. `Tests/01_demo_ddl_e_crud.sql` — demonstra **DDL + CRUD**: `DROP TABLE IF EXISTS`, `CREATE TABLE` (PK/FK/CHECK), `INSERT`, `UPDATE`, `DELETE` e proteção `ON DELETE RESTRICT`.
+2. `Tests/02_demo_ponto_e_triggers.sql` — demonstra **Functions + Registro de Ponto + Triggers**: `fn_distance_meters`, `fn_night_minutes`, `sp_registrar_marcacao_ponto`, bloqueio `< 5 min`, alertas de geolocalização/CIDR em `punch_audit` e bloqueio em espelho fechado.
+3. `Tests/03_demo_abono_banco_escala_fechamento.sql` — demonstra **Abonos, Banco de Horas, Escalas e Fechamento**: `sp_abonar_falta_atraso` (`waiver_audit`), `sp_recalcular_banco_horas`, `sp_vincular_escala_trabalho` e `sp_fechar_espelho_ponto_mensal` + bloqueio pós-fechamento.
+4. `Tests/04_demo_views_e_relatorios.sql` — painel final com a conferência das **5 Views oficiais**.
 
 ## Fluxograma do Projeto
 
