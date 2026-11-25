@@ -26,7 +26,7 @@ time-tracking-database-system/
   triggers/                    os 5 triggers
   views/                       as 5 views
   dql/                         as 20 consultas, numeradas de 01 a 20
-  Tests/                       roteiro enxuto com 5 scripts SQL para demonstração (00 setup + 01 a 04 demos)
+  Tests/                       roteiro ultra-enxuto de 5 minutos com 3 scripts SQL (01 setup, 02 operações, 03 views)
   interface/                   PG Studio (IDE Web PostgreSQL: index.html, styles.css, app.js, data.js)
   server/                      backend Node.js + Express + pg para executar SQL real no PostgreSQL
 ```
@@ -89,15 +89,13 @@ Abra `http://localhost:3000` no navegador, clique no botão de conexão no canto
 ### 2. Modo Offline (sem instalar Node.js nem PostgreSQL)
 Basta abrir o arquivo `interface/index.html` diretamente no navegador. A IDE carrega automaticamente o **Engine Local** com os dados reais extraídos da pasta `DML/`, suportando `SELECT`, as 5 Views, os 20 scripts `DQL/` e testes de `CALL sp_...`.
 
-## Roteiro de Demonstração SQL (`Tests/`)
+## Roteiro de Demonstração — 5 Minutos (`Tests/`)
 
-Para demonstrar todo o projeto de forma rápida e objetiva (pelo grupo **🧪 Scripts de Teste** no PG Studio, pgAdmin ou `psql`), execute os **5 scripts essenciais** em ordem:
+Para apresentar **todo o projeto em 5 minutos** mostrando os códigos completos na tela (no PG Studio, pgAdmin ou `psql`), execute apenas **3 scripts**:
 
-0. `Tests/00_setup_estrutura_e_dados.sql` — **EXECUTE PRIMEIRO**: gera toda a estrutura do banco (25 tabelas e índices), alimenta todas as tabelas + sequences e cria todas as Functions, Procedures, Triggers e Views (também disponível via `psql -f install.sql`).
-1. `Tests/01_demo_ddl_e_crud.sql` — demonstra **DDL + CRUD**: `DROP TABLE IF EXISTS`, `CREATE TABLE` (PK/FK/CHECK), `INSERT`, `UPDATE`, `DELETE` e proteção `ON DELETE RESTRICT`.
-2. `Tests/02_demo_ponto_e_triggers.sql` — demonstra **Functions + Registro de Ponto + Triggers**: `fn_distance_meters`, `fn_night_minutes`, `sp_registrar_marcacao_ponto`, bloqueio `< 5 min`, alertas de geolocalização/CIDR em `punch_audit` e bloqueio em espelho fechado.
-3. `Tests/03_demo_abono_banco_escala_fechamento.sql` — demonstra **Abonos, Banco de Horas, Escalas e Fechamento**: `sp_abonar_falta_atraso` (`waiver_audit`), `sp_recalcular_banco_horas`, `sp_vincular_escala_trabalho` e `sp_fechar_espelho_ponto_mensal` + bloqueio pós-fechamento.
-4. `Tests/04_demo_views_e_relatorios.sql` — painel final com a conferência das **5 Views oficiais**.
+1. **`Tests/01_setup_estrutura_e_dados.sql`** *(~1,5 min)* — **Criação + Carga Inicial:** `DROP IF EXISTS`, `CREATE TABLE` das 25 tabelas + `INSERT` essenciais + sequences (**116 linhas de DDL/DML**) e instalação das Functions, Procedures, Triggers e Views.
+2. **`Tests/02_demo_operacoes_e_triggers.sql`** *(~2,5 min — 60 linhas)* — **Core em Ação:** DDL/CRUD rápido + `fn_distance_meters` + `fn_night_minutes` + todas as **5 Procedures** (`sp_registrar_marcacao_ponto`, `sp_abonar_falta_atraso`, `sp_recalcular_banco_horas`, `sp_vincular_escala_trabalho`, `sp_fechar_espelho_ponto_mensal`) + acionamento ao vivo dos **5 Triggers** + auditorias `punch_audit` e `waiver_audit`.
+3. **`Tests/03_demo_views_e_resultados.sql`** *(~1 min — 14 linhas)* — **Painel Final:** contagem consolidada das **5 Views oficiais**.
 
 ## Fluxograma do Projeto
 
