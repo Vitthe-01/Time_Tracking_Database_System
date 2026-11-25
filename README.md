@@ -26,7 +26,7 @@ time-tracking-database-system/
   triggers/                    os 5 triggers
   views/                       as 5 views
   dql/                         as 20 consultas, numeradas de 01 a 20
-  Tests/                       suíte com 8 scripts SQL de teste (functions, procedures, triggers, views e CRUD)
+  Tests/                       suíte com 9 scripts SQL (fluxo completo + testes individuais de todas as peças)
   interface/                   PG Studio (IDE Web PostgreSQL: index.html, styles.css, app.js, data.js)
   server/                      backend Node.js + Express + pg para executar SQL real no PostgreSQL
 ```
@@ -93,6 +93,7 @@ Basta abrir o arquivo `interface/index.html` diretamente no navegador. A IDE car
 
 Para testar todas as funções, procedures, triggers e views durante a apresentação, execute os scripts na ordem numérica (diretamente pelo grupo **🧪 Scripts de Teste** no PG Studio, no pgAdmin ou via `psql`):
 
+0. `Tests/00_fluxo_completo_apresentacao.sql` — **roteiro ponta a ponta** que aciona em sequência todas as 3 Functions, 5 Procedures, 5 Triggers e 5 Views do projeto.
 1. `Tests/01_test_functions_auxiliares.sql` — testa `fn_distance_meters`, `fn_night_minutes` e `fn_refresh_daily_summary`.
 2. `Tests/02_test_registrar_ponto_e_triggers.sql` — testa `sp_registrar_marcacao_ponto`, bloqueio de intervalo mínimo (`< 5 min`), alertas de geolocalização e rede CIDR em `punch_audit`, bloqueio em espelho fechado e validação de dispositivo.
 3. `Tests/03_test_abono_e_auditoria.sql` — testa `sp_abonar_falta_atraso` (exigência de documento, bloqueio em espelho fechado e abono válido) + trigger `tg_auditoria_justificativas_abono` em `waiver_audit`.
