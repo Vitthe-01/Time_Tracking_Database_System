@@ -103,5 +103,55 @@ Para testar todas as funções, procedures, triggers e views durante a apresenta
 7. `Tests/07_test_todas_views_e_dql_smoke.sql` — smoke test consolidado das 5 Views oficiais.
 8. `Tests/08_test_crud_inserir_editar_excluir.sql` — testa **INSERT, UPDATE e DELETE** em cadastros (`department`, `punch_adjustment`), auditoria de `UPDATE` em `absence_waiver`, edição/exclusão permitida vs bloqueada em `time_punch` (espelho aberto vs fechado) e integridade referencial (`ON DELETE RESTRICT`).
 
+## Fluxograma do Projeto
+
+### Arquitetura Geral
+```mermaid
+flowchart LR
+    U["Usuário (Navegador)"] --> IDE["PG Studio (interface/index.html)"]
+    IDE -->|"Modo PostgreSQL Real"| SRV["Backend Node.js + Express (server/server.js)"]
+    IDE -->|"Modo Offline"| LOCAL["Engine SQL Local (interface/data.js)"]
+    SRV -->|"POST /api/run-core e /api/query"| PG[("PostgreSQL (time_tracking)")]
+    PG --> OBJ["25 Tabelas • 3 Functions • 5 Procedures • 5 Triggers • 5 Views • 20 DQL • 9 Tests"]
+```
+
+### Fluxo do Core de Negócio (Procedures, Functions, Triggers e Views)
+```mermaid
+flowchart TD
+    CAD["Cadastros Base (employer, department, work_location, employee, device, work_schedule)"] --> ESC["sp_vincular_escala_trabalho"]
+    ESC --> HIST["employee_schedule_history"]
+    HIST --> PUNCH["sp_registrar_marcacao_ponto"]
+
+    PUNCH --> TG3{"tg_bloquear_alteracao_espelho_fechado"}
+    TG3 -->|"Espelho fechado"| ERR1["Bloqueia alteração"]
+    TG3 -->|"Espelho aberto"| TG1{"tg_validar_intervalo_minimo_marcacoes"}
+
+    TG1 -->|"< 5 minutos"| ERR2["Bloqueia duplicidade"]
+    TG1 -->|"Válido"| DIST["fn_distance_meters + Checagem CIDR"]
+
+    DIST --> TP["INSERT em time_punch"]
+    TP --> TG2{"tg_alertar_divergencia_geolocalizacao / Rede"}
+    TG2 -->|"Divergência"| PAUD["Grava alerta em punch_audit"]
+    TG2 -->|"OK"| REF["fn_refresh_daily_summary + fn_night_minutes"]
+    PAUD --> REF
+
+    REF --> DS["UPSERT em daily_summary"]
+    DS --> TG4["tg_atualizar_banco_horas_diario -> sp_recalcular_banco_horas"]
+    TG4 --> HB["hour_bank_movement e hour_bank"]
+
+    DS --> ABONO["sp_abonar_falta_atraso"]
+    ABONO --> TG5["tg_auditoria_justificativas_abono -> waiver_audit"]
+
+    DS --> FECHAR["sp_fechar_espelho_ponto_mensal"]
+    FECHAR --> TSHEET["timesheet (Closed + Assinado)"]
+    TSHEET -->|"Trava futuras alterações"| TG3
+
+    DS --> VIEWS["5 Views + 20 Relatórios DQL"]
+    HB --> VIEWS
+    PAUD --> VIEWS
+    TSHEET --> VIEWS
+```
+
+
 
 
