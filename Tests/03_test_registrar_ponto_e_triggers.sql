@@ -1,5 +1,5 @@
 -- ============================================================================
--- TESTE 02: sp_registrar_marcacao_ponto + Triggers de Validação e Auditoria
+-- TESTE 03: sp_registrar_marcacao_ponto + Triggers de Validação e Auditoria
 -- Testa:
 --   1. Marcação válida (dentro do raio e da rede CIDR)
 --   2. Trigger tg_validar_intervalo_minimo_marcacoes (< 5 minutos)

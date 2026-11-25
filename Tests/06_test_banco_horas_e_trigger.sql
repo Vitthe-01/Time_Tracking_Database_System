@@ -1,5 +1,5 @@
 -- ============================================================================
--- TESTE 05: sp_recalcular_banco_horas + Trigger tg_atualizar_banco_horas_diario
+-- TESTE 06: sp_recalcular_banco_horas + Trigger tg_atualizar_banco_horas_diario
 -- Testa:
 --   1. Rejeição de período inválido (end_date < start_date)
 --   2. Acionamento automático do trigger tg_atualizar_banco_horas_diario ao alterar daily_summary

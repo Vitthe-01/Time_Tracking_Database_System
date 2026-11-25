@@ -1,5 +1,5 @@
 -- ============================================================================
--- TESTE 08: CRUD Completo (INSERT, UPDATE e DELETE) + Triggers de Edição/Exclusão
+-- TESTE 09: CRUD Completo (INSERT, UPDATE e DELETE) + Triggers de Edição/Exclusão
 -- Testa:
 --   1. INSERT e UPDATE em tabela cadastral (department) + limpeza opcional
 --   2. INSERT e UPDATE em punch_adjustment (ajuste manual de ponto)

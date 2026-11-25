@@ -1,5 +1,5 @@
 -- ============================================================================
--- TESTE 06: sp_vincular_escala_trabalho
+-- TESTE 07: sp_vincular_escala_trabalho
 -- Testa:
 --   1. Rejeição de escala pertencente a outro empregador
 --   2. Rejeição quando colaborador já está vinculado à mesma escala

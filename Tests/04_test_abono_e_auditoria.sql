@@ -1,5 +1,5 @@
 -- ============================================================================
--- TESTE 03: sp_abonar_falta_atraso + Trigger tg_auditoria_justificativas_abono
+-- TESTE 04: sp_abonar_falta_atraso + Trigger tg_auditoria_justificativas_abono
 -- Testa:
 --   1. Rejeição quando documento comprobatório não é informado
 --   2. Bloqueio quando período está em espelho fechado e assinado (Colaborador #1)

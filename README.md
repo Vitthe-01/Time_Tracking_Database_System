@@ -26,7 +26,7 @@ time-tracking-database-system/
   triggers/                    os 5 triggers
   views/                       as 5 views
   dql/                         as 20 consultas, numeradas de 01 a 20
-  Tests/                       suíte com 9 scripts SQL (fluxo completo + testes individuais de todas as peças)
+  Tests/                       suíte com 11 scripts SQL (00 setup estrutura+carga + 01..09 testes + 10 fluxo completo)
   interface/                   PG Studio (IDE Web PostgreSQL: index.html, styles.css, app.js, data.js)
   server/                      backend Node.js + Express + pg para executar SQL real no PostgreSQL
 ```
@@ -93,15 +93,17 @@ Basta abrir o arquivo `interface/index.html` diretamente no navegador. A IDE car
 
 Para testar todas as funções, procedures, triggers e views durante a apresentação, execute os scripts na ordem numérica (diretamente pelo grupo **🧪 Scripts de Teste** no PG Studio, no pgAdmin ou via `psql`):
 
-0. `Tests/00_fluxo_completo_apresentacao.sql` — **roteiro ponta a ponta** que aciona em sequência todas as 3 Functions, 5 Procedures, 5 Triggers e 5 Views do projeto.
-1. `Tests/01_test_functions_auxiliares.sql` — testa `fn_distance_meters`, `fn_night_minutes` e `fn_refresh_daily_summary`.
-2. `Tests/02_test_registrar_ponto_e_triggers.sql` — testa `sp_registrar_marcacao_ponto`, bloqueio de intervalo mínimo (`< 5 min`), alertas de geolocalização e rede CIDR em `punch_audit`, bloqueio em espelho fechado e validação de dispositivo.
-3. `Tests/03_test_abono_e_auditoria.sql` — testa `sp_abonar_falta_atraso` (exigência de documento, bloqueio em espelho fechado e abono válido) + trigger `tg_auditoria_justificativas_abono` em `waiver_audit`.
-4. `Tests/04_test_fechar_espelho_e_bloqueio.sql` — testa `sp_fechar_espelho_ponto_mensal` (rejeição de mês futuro, fechamento real em mês encerrado `2026-01`, bloqueio de duplo fechamento e bloqueio pós-fechamento).
-5. `Tests/05_test_banco_horas_e_trigger.sql` — testa `sp_recalcular_banco_horas` e `tg_atualizar_banco_horas_diario`.
-6. `Tests/06_test_vincular_escala_trabalho.sql` — testa `sp_vincular_escala_trabalho` (empregador diferente, vínculo duplicado e troca de escala com encerramento de vigência anterior).
-7. `Tests/07_test_todas_views_e_dql_smoke.sql` — smoke test consolidado das 5 Views oficiais.
-8. `Tests/08_test_crud_inserir_editar_excluir.sql` — testa **INSERT, UPDATE e DELETE** em cadastros (`department`, `punch_adjustment`), auditoria de `UPDATE` em `absence_waiver`, edição/exclusão permitida vs bloqueada em `time_punch` (espelho aberto vs fechado) e integridade referencial (`ON DELETE RESTRICT`).
+0. `Tests/00_setup_estrutura_e_dados.sql` — **EXECUTE PRIMEIRO**: script autocontido que limpa, gera toda a estrutura do banco (25 tabelas e índices), alimenta todas as tabelas + sequences e cria todas as Functions, Procedures, Triggers e Views antes de rodar os testes (também disponível via `psql -f install.sql`).
+1. `Tests/01_test_ddl_create_e_drop.sql` — testa **DDL** (`DROP TABLE IF EXISTS`, `CREATE TABLE` com PK/FK/CHECK/DEFAULT, validação de constraint e limpeza segura com `DROP TABLE IF EXISTS`).
+2. `Tests/02_test_functions_auxiliares.sql` — testa `fn_distance_meters`, `fn_night_minutes` e `fn_refresh_daily_summary`.
+3. `Tests/03_test_registrar_ponto_e_triggers.sql` — testa `sp_registrar_marcacao_ponto`, bloqueio de intervalo mínimo (`< 5 min`), alertas de geolocalização e rede CIDR em `punch_audit`, bloqueio em espelho fechado e validação de dispositivo.
+4. `Tests/04_test_abono_e_auditoria.sql` — testa `sp_abonar_falta_atraso` (exigência de documento, bloqueio em espelho fechado e abono válido) + trigger `tg_auditoria_justificativas_abono` em `waiver_audit`.
+5. `Tests/05_test_fechar_espelho_e_bloqueio.sql` — testa `sp_fechar_espelho_ponto_mensal` (rejeição de mês futuro, fechamento real em mês encerrado `2026-01`, bloqueio de duplo fechamento e bloqueio pós-fechamento).
+6. `Tests/06_test_banco_horas_e_trigger.sql` — testa `sp_recalcular_banco_horas` e `tg_atualizar_banco_horas_diario`.
+7. `Tests/07_test_vincular_escala_trabalho.sql` — testa `sp_vincular_escala_trabalho` (empregador diferente, vínculo duplicado e troca de escala com encerramento de vigência anterior).
+8. `Tests/08_test_todas_views_e_dql_smoke.sql` — smoke test consolidado das 5 Views oficiais.
+9. `Tests/09_test_crud_inserir_editar_excluir.sql` — testa **INSERT, UPDATE e DELETE** em cadastros (`department`, `punch_adjustment`), auditoria de `UPDATE` em `absence_waiver`, edição/exclusão permitida vs bloqueada em `time_punch` (espelho aberto vs fechado) e integridade referencial (`ON DELETE RESTRICT`).
+10. `Tests/10_fluxo_completo_apresentacao.sql` — **roteiro ponta a ponta** que aciona em sequência todas as 3 Functions, 5 Procedures, 5 Triggers e 5 Views do projeto.
 
 ## Fluxograma do Projeto
 

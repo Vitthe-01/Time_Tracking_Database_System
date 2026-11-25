@@ -1,5 +1,5 @@
 -- ============================================================================
--- TESTE 01: Funções Auxiliares (fn_distance_meters, fn_night_minutes, fn_refresh_daily_summary)
+-- TESTE 02: Funções Auxiliares (fn_distance_meters, fn_night_minutes, fn_refresh_daily_summary)
 -- ============================================================================
 
 -- Executa o recálculo idempotente do resumo diário do Colaborador #21 (2026-10-19)

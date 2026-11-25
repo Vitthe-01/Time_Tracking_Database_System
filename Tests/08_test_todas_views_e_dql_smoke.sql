@@ -1,5 +1,5 @@
 -- ============================================================================
--- TESTE 07: Smoke Test das 5 Views oficiais do projeto
+-- TESTE 08: Smoke Test das 5 Views oficiais do projeto
 -- ============================================================================
 
 -- Amostra individual (descomente qualquer linha ou selecione e clique em "▷ Seleção")

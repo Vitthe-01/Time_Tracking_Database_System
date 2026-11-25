@@ -1,5 +1,5 @@
 -- ============================================================================
--- TESTE 04: sp_fechar_espelho_ponto_mensal + Bloqueio Pós-Fechamento
+-- TESTE 05: sp_fechar_espelho_ponto_mensal + Bloqueio Pós-Fechamento
 -- Testa:
 --   1. Rejeição de fechamento de mês futuro (2099-12)
 --   2. Fechamento real em mês já encerrado (2026-01) para Colaborador #22
