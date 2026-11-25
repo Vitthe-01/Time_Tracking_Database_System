@@ -93,9 +93,9 @@ Basta abrir o arquivo `interface/index.html` diretamente no navegador. A IDE car
 
 Para apresentar **todo o projeto em 5 minutos** mostrando os códigos completos na tela (no PG Studio, pgAdmin ou `psql`), execute apenas **3 scripts**:
 
-1. **`Tests/01_setup_estrutura_e_dados.sql`** *(~1,5 min)* — **Criação + Carga Inicial:** `DROP IF EXISTS`, `CREATE TABLE` das 25 tabelas + `INSERT` essenciais + sequences (**116 linhas de DDL/DML**) e instalação das Functions, Procedures, Triggers e Views.
-2. **`Tests/02_demo_operacoes_e_triggers.sql`** *(~2,5 min — 60 linhas)* — **Core em Ação:** DDL/CRUD rápido + `fn_distance_meters` + `fn_night_minutes` + todas as **5 Procedures** (`sp_registrar_marcacao_ponto`, `sp_abonar_falta_atraso`, `sp_recalcular_banco_horas`, `sp_vincular_escala_trabalho`, `sp_fechar_espelho_ponto_mensal`) + acionamento ao vivo dos **5 Triggers** + auditorias `punch_audit` e `waiver_audit`.
-3. **`Tests/03_demo_views_e_resultados.sql`** *(~1 min — 14 linhas)* — **Painel Final:** contagem consolidada das **5 Views oficiais**.
+1. **`Tests/01_setup_estrutura_e_dados.sql`** *(~1,5 min — **100 linhas**)* — **Criação + Carga Inicial:** `DROP IF EXISTS`, `CREATE TABLE` das 25 tabelas, `INSERT` essenciais e ajuste de `sequences` *(as Functions, Procedures, Triggers e Views ficam nas pastas oficiais — instale via botão **"Rodar Core"** no PG Studio ou `psql -f install.sql`)*.
+2. **`Tests/02_demo_operacoes_e_triggers.sql`** *(~2,5 min — **65 linhas**)* — **Core em Ação:** DDL/CRUD rápido + `fn_distance_meters` + `fn_night_minutes` + todas as **5 Procedures** (`sp_registrar_marcacao_ponto`, `sp_abonar_falta_atraso`, `sp_recalcular_banco_horas`, `sp_vincular_escala_trabalho`, `sp_fechar_espelho_ponto_mensal`) + acionamento ao vivo dos **5 Triggers** + auditorias `punch_audit` e `waiver_audit`.
+3. **`Tests/03_demo_views_e_resultados.sql`** *(~1 min — **14 linhas**)* — **Painel Final:** contagem consolidada das **5 Views oficiais**.
 
 ## Fluxograma do Projeto
 
